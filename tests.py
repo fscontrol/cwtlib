@@ -1,5 +1,6 @@
 import unittest
 import params
+from tower import Tower, Air
 
 class TestTempParam(unittest.TestCase):
     def setUp(self):
@@ -38,7 +39,6 @@ class TestHumidityParam(unittest.TestCase):
     def test_ratio_to_proc(self):
         self.hum.ratio = 0.5
         self.assertEqual(self.hum.proc, 50)
-
 
 class TestPressureParam(unittest.TestCase):
     def setUp(self):
@@ -143,7 +143,27 @@ class TestTDS(unittest.TestCase):
         self.tds.usm = 1000
         self.assertAlmostEqual(self.tds.ppm, 500, 0)
 
+class TestAir(unittest.TestCase):
+    def setUp(self):
+        self.air = Air()
 
+    def test_air(self):
+        self.assertAlmostEqual(self.air.evaporation_snip(), 0.0016, 3)
+        self.assertAlmostEqual(self.air.evaporation_kurita(), 0.0016, 3)
+        self.assertAlmostEqual(self.air.wet_bulb().C, 18, 1)
+
+class TestTower(unittest.TestCase):
+    def setUp(self):
+        self.tower = Tower()
+
+    def test_evaporation(self):
+        self.assertAlmostEqual(self.tower.evaporation(), 16.6, 0)
+
+    def test_cycling(self):
+        self.tower.set_cycles(2)
+        self.assertAlmostEqual(self.tower.ev, self.tower.bd, 0)
+    def test_efficiency(self):
+        self.assertAlmostEqual(self.tower.efficacy(), 0.41, 1)
 
 if __name__ == '__main__':
     unittest.main()

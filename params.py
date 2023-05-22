@@ -6,6 +6,10 @@ class Param:
         self._unit = unit
         self._value = value
 
+    def set_value(self, value):
+        self._value = value
+        return self
+
     @property
     def unit(self):
         return self._unit
