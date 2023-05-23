@@ -143,10 +143,12 @@ class Ion:
 
 class ConcP(Param):
     hardness_list = ["ca", "hrd", "mg"]
-    def __init__(self, unit="meq", ion="cl"):
+
+    def __init__(self, v=0, unit="meq", ion="cl"):
         super().__init__(unit=unit)
         self._ion = Ion(ion)
         self.set_funcs()
+        self.value = v
 
     def set_funcs(self):
         self.units = dict(
@@ -214,9 +216,10 @@ class TDSP(Param):
             ppm = dict(read=lambda x: x, write=lambda x: x),
             usm = dict(read=lambda x: x*self.tds_coeff, write=lambda x: x/self.tds_coeff),
         )
-    def __init__(self, unit="ppm", tds_coeff = 2):
+    def __init__(self, unit="ppm", v=0, tds_coeff = 2):
         super().__init__(unit=unit)
         self.tds_coeff = tds_coeff
         self.set_funcs()
+        self.value = v
 
 
