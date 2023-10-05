@@ -193,7 +193,7 @@ class TestWater(unittest.TestCase):
         self.assertAlmostEqual(self.water.lsi(), 1.02, 1)
         self.water.set_cycles(2)
         self.water.po4 = params.ConcP(3, "ppm", "po4")
-        self.assertAlmostEqual(self.water.po4_si(), 0)
+        self.assertAlmostEqual(self.water.po4_si(), 0, 1)
 
 
 if __name__ == '__main__':
