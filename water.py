@@ -1,5 +1,7 @@
 import numpy as np
-from params import *
+from measure_units.temp import TempP
+from measure_units.conc import ConcP, TDSP
+from measure_units.param import Param
 
 class Water:
     def __init__(self, **kwargs):

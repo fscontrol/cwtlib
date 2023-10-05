@@ -1,11 +1,15 @@
 import unittest
-import params
+from measure_units.param import Param
+from measure_units.temp import TempP
+from measure_units.humidity import HumidityP
+from measure_units.pressure import PressureP
+from measure_units.conc import *
 from tower import Tower, Air
 from water import Water
 
 class TestTempParam(unittest.TestCase):
     def setUp(self):
-        self.temp = params.TempP()
+        self.temp = TempP()
         self.temp.C = 100
 
     def test_set_farenheit(self):
@@ -19,7 +23,7 @@ class TestTempParam(unittest.TestCase):
         self.assertEqual(self.temp.C, 1060)
 
     def test_sum_diff(self):
-        temp2 = params.TempP()
+        temp2 = TempP()
         temp2.C = 100
         temp2 = self.temp + temp2
         self.assertEqual(temp2.C, 200)
@@ -31,7 +35,7 @@ class TestTempParam(unittest.TestCase):
 
 class TestHumidityParam(unittest.TestCase):
     def setUp(self):
-        self.hum = params.HumidityP()
+        self.hum = HumidityP()
         self.hum.proc = 50
 
     def test_set_ratio(self):
@@ -43,7 +47,7 @@ class TestHumidityParam(unittest.TestCase):
 
 class TestPressureParam(unittest.TestCase):
     def setUp(self):
-        self.press = params.PressureP()
+        self.press = PressureP()
         self.press.kpa = 101.325
 
     def test_pa(self):
@@ -86,17 +90,17 @@ class TestPressureParam(unittest.TestCase):
 
 class TestIon(unittest.TestCase):
     def setUp(self):
-        self.ion = params.Ion("po4")
+        self.ion = Ion("po4")
     def test_ion(self):
         self.assertAlmostEqual(self.ion.molar_weight, 95, 0)
         self.assertAlmostEqual(self.ion.charge, -3, 0)
         self.assertAlmostEqual(self.ion.equiv_weight, 31.6666666666667, 0)
 
-class ConcP(unittest.TestCase):
+class TestConc(unittest.TestCase):
     def setUp(self):
-        self.po4 = params.ConcP(1, "meq", "po4")
-        self.ca = params.ConcP(2, "meq", "ca")
-        self.mg = params.ConcP(3, "meq", "mg")
+        self.po4 = ConcP(1, "meq", "po4")
+        self.ca = ConcP(2, "meq", "ca")
+        self.mg = ConcP(3, "meq", "mg")
 
     def test_ppm(self):
         self.assertAlmostEqual(self.po4.ppm, 31.6666666666667, 0)
@@ -134,7 +138,7 @@ class ConcP(unittest.TestCase):
 
 class TestTDS(unittest.TestCase):
     def setUp(self):
-        self.tds = params.TDSP()
+        self.tds = TDSP()
         self.tds.ppm = 1000
     def test_us(self):
         self.assertAlmostEqual(self.tds.usm, 2000, 0)
@@ -165,10 +169,10 @@ class TestTower(unittest.TestCase):
 
 class TestWater(unittest.TestCase):
     def setUp(self):
-        self.water = Water(ph=8.0, ca=params.ConcP(5, "meq", "ca"),
-                           alk=params.ConcP(4, "meq", "alk"),
-                           temp=params.TempP("C", 30),
-                           tds=params.TDSP("ppm", 1000))
+        self.water = Water(ph=8.0, ca=ConcP(5, "meq", "ca"),
+                           alk=ConcP(4, "meq", "alk"),
+                           temp=TempP("C").set_value(30),
+                           tds=TDSP("ppm").set_value(1000))
 
     def test_init_values(self):
         self.assertAlmostEqual(self.water.ph, 8.0, 1)
@@ -192,7 +196,7 @@ class TestWater(unittest.TestCase):
     def test_calc_lsi(self):
         self.assertAlmostEqual(self.water.lsi(), 1.02, 1)
         self.water.set_cycles(2)
-        self.water.po4 = params.ConcP(3, "ppm", "po4")
+        self.water.po4 = ConcP(3, "ppm", "po4")
         self.assertAlmostEqual(self.water.po4_si(), 0, 1)
 
 

@@ -1,7 +1,9 @@
 import math
 import requests
 import os
-from params import TempP, HumidityP, PressureP
+from measure_units.temp import TempP
+from measure_units.humidity import HumidityP
+from measure_units.pressure import PressureP
 import numpy as np
 from copy import deepcopy
 try:
