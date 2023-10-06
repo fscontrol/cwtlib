@@ -1,4 +1,4 @@
-from measure_units.param import Param
+from cwtlib.measure_units.param import Param
 class VolumeP(Param):
     units = dict(
         l = dict(read=lambda x: x, write=lambda x: x),
@@ -11,7 +11,7 @@ class TimeP(Param):
     units = dict(
         s = dict(read=lambda x: x, write=lambda x: x),
         m = dict(read=lambda x: x/60, write=lambda x: x*60),
-        h = dict(read=lambda x: x/3600, write=lambda x: x/3600),
+        h = dict(read=lambda x: x/3600, write=lambda x: x*3600),
         d = dict(read=lambda x: x/3600/24, write=lambda x: x*3600*24)
     )
 
@@ -22,14 +22,16 @@ class VolumeRate:
 
     def to_base(self, value, unit):
         volume_unit, time_unit = unit.split('_')
-        volume_to_base = VolumeP.units[volume_unit]['read'](value)
-        time_to_base = TimeP.units[time_unit]['read'](1)
-        return volume_to_base / time_to_base
+        vol = VolumeP(volume_unit).set_value(value)
+        time = TimeP(time_unit).set_value(1)
+        return vol.l/time.s
 
     def from_base(self, volume_unit, time_unit):
-        volume_from_base = VolumeP.units[volume_unit]['write'](self.base_value)
-        time_from_base = TimeP.units[time_unit]['write'](1)
-        return volume_from_base * time_from_base
+        vol = VolumeP("l").set_value(self.base_value)
+        vol.unit = volume_unit
+        time = TimeP("s").set_value(1)
+        time.unit = time_unit
+        return vol.value/time.value
 
     def __getattr__(self, name):
         if "_" in name:

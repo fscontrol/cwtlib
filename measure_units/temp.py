@@ -1,4 +1,4 @@
-from measure_units.param import Param
+from cwtlib.measure_units.param import Param
 class TempP(Param):
     units = dict(
         C=dict(read=lambda x: x, write=lambda x: x),

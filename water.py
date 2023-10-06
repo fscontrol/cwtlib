@@ -1,7 +1,7 @@
 import numpy as np
-from measure_units.temp import TempP
-from measure_units.conc import ConcP, TDSP
-from measure_units.param import Param
+from cwtlib.measure_units.temp import TempP
+from cwtlib.measure_units.conc import ConcP, TDSP
+from cwtlib.measure_units.param import Param
 
 class Water:
     def __init__(self, **kwargs):
@@ -114,7 +114,11 @@ class Water:
         return 100*(self.cl.meq + self.so4.meq)/self.alk.meq
 
     def calc_tds(self):
-        return self.alk.caco3 + self.hrd.caco3 + self.cl.ppm + self.so4.ppm
+        tds = 0
+        for k, v in self.__dict__.items():
+            if isinstance(v, ConcP):
+                tds += v.ppm
+        return tds
 
     def calc_na(self):
         na =self.cl.meq + self.so4.meq + self.alk.meq - self.hrd.meq
@@ -149,4 +153,29 @@ class Water:
 
     def rzn_simple(self):
         return 2*self.phs_simple() - self.ph
+
+    def calc_ions(self):
+        balance = 0
+        for k, v in self.__dict__.items():
+            if isinstance(v, ConcP):
+                balance += v.meq*v._ion.charge
+        return balance
+
+    @property
+    def cations(self):
+        balance = 0
+        for k, v in self.__dict__.items():
+            if isinstance(v, ConcP):
+                if v._ion.charge > 0:
+                    balance += v.meq*v._ion.charge
+        return balance
+
+    @property
+    def anions(self):
+        balance = 0
+        for k, v in self.__dict__.items():
+            if isinstance(v, ConcP):
+                if v._ion.charge < 0:
+                    balance += v.meq*v._ion.charge
+        return -balance
 

@@ -1,4 +1,4 @@
-from measure_units.param import Param
+from cwtlib.measure_units.param import Param
 class PressureP(Param):
     units = dict(
         pa = dict(read=lambda x: x, write=lambda x: x),

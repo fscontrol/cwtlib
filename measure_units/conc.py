@@ -1,5 +1,6 @@
-from measure_units.param import Param
+from cwtlib.measure_units.param import Param
 from copy import deepcopy
+import numpy as np
 class Ion:
     IONS = {
             "cl" : [35.5, 1, -1],
@@ -13,7 +14,12 @@ class Ion:
             "zn" : [65, 2, 1],
             "hco3" : [61, 2, -1],
             "nh4" : [18, 1, 1],
-             "sio2": [59, 2, -1]
+             "sio2": [59, 2, -1],
+                "no3": [62, 1, -1],
+                "no2": [46, 1, -1],
+                "mn": [55, 2, 1],
+                "f": [19, 1, -1],
+                "cu": [64, 2, 1]
         }
     def __init__(self, name):
         try:
@@ -105,5 +111,16 @@ class TDSP(Param):
         self.tds_coeff = tds_coeff
         self.set_funcs()
         self.value = v
+
+    def to_ppm(self):
+        if self.usm > 7630:
+            return 0.0000000000801 * np.exp((-50.6458-np.log(self.usm))**2 / 112.484)
+        else:
+            return 7.7E-20 * np.exp((-90.4756-np.log(self.usm))**2 / 188.884)
+    def to_usm(self):
+        if self.ppm > 4089.5:
+            return np.exp(-50.6458 + (112.484*np.log(self.ppm/0.0000000000801))**0.5)
+        else:
+            return np.exp(-90.4756 + (188.84 * np.log(self.ppm / 7.7E-20)) ** 0.5)
 
 

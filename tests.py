@@ -1,12 +1,32 @@
 import unittest
-from measure_units.param import Param
-from measure_units.temp import TempP
-from measure_units.humidity import HumidityP
-from measure_units.pressure import PressureP
-from measure_units.conc import *
+if __name__ == '__main__':
+    import sys
+    import os
+    sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from cwtlib.measure_units.param import Param
+from cwtlib.measure_units.temp import TempP
+from cwtlib.measure_units.humidity import HumidityP
+from cwtlib.measure_units.pressure import PressureP
+from cwtlib.measure_units.conc import *
+from cwtlib.measure_units.volumes import *
 from tower import Tower, Air
 from water import Water
 
+class TestVolume(unittest.TestCase):
+    def test_time(self):
+        time = TimeP("h").set_value(1)
+        self.assertEqual(time.s, 3600)
+        self.assertEqual(time.m, 60)
+        self.assertEqual(time.h, 1)
+        self.assertEqual(time.d, 1/24)
+    def test_volume(self):
+        vol = VolumeP("l").set_value(1000)
+        self.assertEqual(vol.m3, 1)
+        self.assertEqual(vol.l, 1000)
+    def test_volume_rate(self):
+        vol = VolumeRate(1, "m3_h")
+        self.assertEqual(vol.m3_h, 1)
+        self.assertEqual(vol.l_s, 1000/3600)
 class TestTempParam(unittest.TestCase):
     def setUp(self):
         self.temp = TempP()
@@ -159,11 +179,11 @@ class TestTower(unittest.TestCase):
         self.tower = Tower()
 
     def test_evaporation(self):
-        self.assertAlmostEqual(self.tower.evaporation(), 16.6, 0)
+        self.assertAlmostEqual(self.tower.evaporation().m3_h, 16.6, 0)
 
     def test_cycling(self):
         self.tower.set_cycles(2)
-        self.assertAlmostEqual(self.tower.ev, self.tower.bd, 0)
+        self.assertAlmostEqual(self.tower.ev.m3_h, self.tower.bd.m3_h, 0)
     def test_efficiency(self):
         self.assertAlmostEqual(self.tower.efficacy(), 0.41, 1)
 
@@ -198,6 +218,7 @@ class TestWater(unittest.TestCase):
         self.water.set_cycles(2)
         self.water.po4 = ConcP(3, "ppm", "po4")
         self.assertAlmostEqual(self.water.po4_si(), 0, 1)
+
 
 
 if __name__ == '__main__':

@@ -1,9 +1,11 @@
 import math
 import requests
 import os
-from measure_units.temp import TempP
-from measure_units.humidity import HumidityP
-from measure_units.pressure import PressureP
+from cwtlib.measure_units.temp import TempP
+from cwtlib.measure_units.humidity import HumidityP
+from cwtlib.measure_units.pressure import PressureP
+from cwtlib.measure_units.volumes import VolumeP, TimeP
+from cwtlib.measure_units.volumes import VolumeRate
 import numpy as np
 from copy import deepcopy
 try:
@@ -39,7 +41,7 @@ class Air:
         return TempP("C").set_value(wb)
 
 class Tower:
-    def __init__(self, rr=2100, vol=650, thot=TempP("C").set_value(30), tcold=TempP("C").set_value(25), air=Air()):
+    def __init__(self, rr=VolumeRate(2100, "m3_h"), vol=VolumeP("m3").set_value(650), thot=TempP("C").set_value(30), tcold=TempP("C").set_value(25), air=Air()):
         self.air = air
         self.rr = rr
         self.vol = vol
@@ -48,17 +50,17 @@ class Tower:
 
     def evaporation(self, tip="snip"):
         if tip == "snip":
-            self.ev = self.air.evaporation_snip()*(self.thot.C - self.tcold.C)*self.rr
+            self.ev = VolumeRate(self.air.evaporation_snip()*(self.thot.C - self.tcold.C)*self.rr.m3_h, "m3_h")
         else:
-            self.ev = self.air.evaporation_kurita() * (self.thot.C - self.tcold.C) * self.rr
+            self.ev = VolumeRate(self.air.evaporation_kurita() * (self.thot.C - self.tcold.C) * self.rr.m3_h, "m3_h")
         return self.ev
 
     def set_cycles(self, cycles):
         self.cycles = cycles
         self.evaporation()
-        self.mu = self.ev*cycles/(cycles-1)
-        self.bd = self.mu/cycles
-        self.hti = self.vol/self.bd*math.log(2)
+        self.mu = VolumeRate(self.ev.m3_h*cycles/(cycles-1), "m3_h")
+        self.bd = VolumeRate(self.mu.m3_h/cycles, "m3_h")
+        self.hti = TimeP("h").set_value(self.vol.m3/self.bd.m3_h*math.log(2))
 
     def efficacy(self):
         wb = self.air.wet_bulb()

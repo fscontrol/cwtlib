@@ -1,4 +1,4 @@
-from measure_units.param import Param
+from cwtlib.measure_units.param import Param
 class HumidityP(Param):
     units = dict(
         proc = dict(read=lambda x: x, write=lambda x: x),
