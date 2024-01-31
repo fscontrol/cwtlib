@@ -14,5 +14,5 @@ setup(
     description="A package for working with the basic calculations of the CWT, RO",
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
-    url="https://github.com/yourusername/your_package",
+    url="https://github.com/fscontrol/cwtlib",
 )
