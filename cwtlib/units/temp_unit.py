@@ -6,4 +6,3 @@ class TempUnit(Unit):
         c = dict(a=1, b=-273.15),
         f = dict(a=1.8, b=-459.67),
     )
-
