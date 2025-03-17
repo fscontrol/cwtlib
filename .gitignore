@@ -3,3 +3,4 @@ cwtlib.egg-info
 dist
 .idea
 venv
+.pyirc

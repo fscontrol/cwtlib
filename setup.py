@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="cwtlib",
-    version="0.1",
+    version="0.2",
     packages=find_packages(),
     install_requires=[
         'numpy>=1.18.1',
