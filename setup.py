@@ -2,17 +2,23 @@ from setuptools import setup, find_packages
 
 setup(
     name="cwtlib",
-    version="0.2",
+    version="0.1.0",
     packages=find_packages(),
     install_requires=[
-        'numpy>=1.18.1',
-        'requests>=2.22.0',
+        "numpy",
+        "requests",
+        "cwt-units-converter",
     ],
-    # другие метаданные:
-    author="Dmitrii Babaev",
-    author_email="babaevdmitri@gmail.com",
-    description="A package for working with the basic calculations of the CWT, RO",
-    long_description=open('README.md').read(),
-    long_description_content_type='text/markdown',
-    url="https://github.com/fscontrol/cwtlib",
+    python_requires=">=3.8",
+    author="Your Name",
+    author_email="your.email@example.com",
+    description="A library for water treatment calculations",
+    long_description=open("README.md").read(),
+    long_description_content_type="text/markdown",
+    url="https://github.com/yourusername/cwtlib",
+    classifiers=[
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+    ],
 )

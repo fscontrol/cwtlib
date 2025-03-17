@@ -1,15 +1,9 @@
-from cwtlib.water import Water
-from units_converter import Ion, TDSUnit, TemperatureUnit,IonConcentration
-
-ca = IonConcentration("ca", 100, 'ppm')
-hco3 = IonConcentration("hco3", 100, 'ppm')
-cl = IonConcentration("cl", 100, 'ppm')
-so4 = IonConcentration("so4", 100, 'ppm')
-temp = TemperatureUnit(25, 'c')
-tds = TDSUnit(1000, 'ppm')
-ph = 7
-water = Water(ph=ph, ca=ca, hco3=hco3, temp=temp, tds=tds, cl=cl, so4=so4)
-
-print(water.phs())
-print(water.phs_simple())
-
+        "pa": ConverstionFactor(1, 0),           # Паскаль (базовая единица)
+        "bar": ConverstionFactor(1e5, 0),        # Бар
+        "atm": ConverstionFactor(101325, 0),     # Атмосфера
+        "psi": ConverstionFactor(6894.76, 0),    # Фунт на квадратный дюйм
+        "mmhg": ConverstionFactor(133.322, 0),   # Миллиметр ртутного столба
+        "mbar": ConverstionFactor(100, 0),       # Миллибар
+        "kpa": ConverstionFactor(1000, 0),       # Килопаскаль
+        "mpa": ConverstionFactor(1e6, 0),        # Мегапаскаль
+    }

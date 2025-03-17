@@ -34,7 +34,7 @@ class Water:
         for k, v in self.__dict__.items():
             if isinstance(v, IonConcentration) or isinstance(v, TDSUnit):
                 self.__dict__[k] *= c/c_old
-        self.pH = self.ph_predict()
+        self.ph = self.ph_predict()
     def ph_predict(self):
         ans = 4.17 + 1.7177 * np.log10(self.hco3.caco3 + 0.001)
         if ans < 4.5:
@@ -84,10 +84,7 @@ class Water:
     def calc_na(self):
         return self.calc_ions()
     def larsen_modified(self, hti):
-        '''
-        hti: hours to impact
-        '''
-        return (self.cl.meq + self.so4.meq + self.calc_ions())**0.5/self.hco3.meq*self.temp.c/25*hti/50/24
+        return (self.cl.meq + self.so4.meq + self.calc_ions())**0.5/self.hco3.meq*self.temp.c/25*hti.h/50/24
     def po4_si(self):
         return self.ph - (11.75 - np.log10(self.ca.caco3) - np.log10(self.po4.caco3) - 2 * np.log10(self.temp.c))/0.65
     def sio2_si(self):
